@@ -52,6 +52,8 @@ for i = 1:numCases %numloops == numstudies
 	heightDTI = listInfoDTI(1).Height;
 	scaleFactor = heightADC/heightDTI;
 
+	selectedInfoDTI = repmat(tmpDTIinfo,numSlices,1);
+
 	for j = 1:numSlices
 		sliceLocToMatch = listInfoADC(j).SliceLocation;
 
@@ -85,18 +87,12 @@ for i = 1:numCases %numloops == numstudies
 		end
 
 		matchedSlicesDTI(j,1) = DTISliceNumber;
+		selectedInfoDTI(j) = dicominfo(listInfoDTI(DTISliceNumber).Filename);
 	end
 
-	listSliceTransformationsDTI = zeros(numSlices,2,1);
-
-	for j = 1:numSlices
-		[tmpAngle,tmpTrans] = computeSliceTransformation(listImagesDTI{j});
-        listSliceTransformationsDTI(j,1,1) = tmpAngle;
-        listSliceTransformationsDTI(j,2,1) = tmpTrans;
-	end
 
 	fnameTransformation = fullfile(destDir,strcat(studyNumber,'.mat'));
-    save(fnameTransformation,'matchedSlicesDTI','listSliceTransformationsDTI');	
+    save(fnameTransformation,'matchedSlicesDTI','selectedInfoDTI');	
 	
-	clear matchedSlicesDTI listSliceTransformationsDTI
+	clear matchedSlicesDTI listInfoDTI
 end

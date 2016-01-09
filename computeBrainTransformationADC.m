@@ -42,7 +42,7 @@ for i = 1:numCases %numloops == numstudies
         listImagesADC{j} = uint8(dicomread(fnameSlice));
         listInfoADC(j) = dicominfo(fnameSlice);
 
-        [tmpAngle, tmpTrans] = computeSliceTransformation(listImagesADC{j});
+        [tmpAngle tmpTrans] = computeSliceTransformation(listImagesADC{j});
         listSliceTransformationsADC(j,1,1) = tmpAngle;
         listSliceTransformationsADC(j,2,1) = tmpTrans;
     end
@@ -68,9 +68,7 @@ for i = 1:numCases %numloops == numstudies
     %        fnameSlice = fullfile(pathDTI,listDTI(j).name);
     %        allImagesDTI{j} = dicomread(fnameSlice);
     %        allInfoDTI(j) = dicominfo(fnameSlice);
-    %    end
-        
-        
+    %    end          
 
     
     %compute DTI slices by closest slice location
@@ -78,6 +76,5 @@ for i = 1:numCases %numloops == numstudies
         %for j = 1:numel(uslices)
         %    location = listInfoADC(j).SliceLocation;
         %end
-        
 end
 end

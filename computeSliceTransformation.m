@@ -20,7 +20,7 @@ pixelRange = 41;
     end
     
     index = find(angleCorrs==max(angleCorrs));
-    angle = (index - round(angleRange/2))/2;
+    angle = (index - round(angleRange/2))/-2;
     %divide the optimal correlation angle by 2 to get the angle that will
     %rotate our brain to be parallel with the y-axis
     
