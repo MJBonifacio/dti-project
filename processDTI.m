@@ -7,7 +7,7 @@ function processDTI()
     rootData = './data';
     maskDir = './data/masks';
     ADCtransDir = './data/transformationsADC';
-    destDir = './data/transformationsDTI';
+    destDir = './transformationsDTI';
 
 %load data
     listDirs = dir(rootData);

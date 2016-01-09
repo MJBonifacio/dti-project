@@ -7,7 +7,7 @@ function computeBrainTransformationADC()
 %path constants
     rootData = './data';
     maskDir = './data/masks';
-    destDir = './data/transformationsADC'; 
+    destDir = './transformationsADC'; 
 
 
 %load data
