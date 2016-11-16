@@ -21,8 +21,8 @@ pixelRange = 41;
     
     index = find(angleCorrs==max(angleCorrs));
     angle = (index - round(angleRange/2))/-2;
-    %divide the optimal correlation angle by 2 to get the angle that will
-    %rotate our brain to be parallel with the y-axis
+    % divide the optimal correlation angle by 2 to get the angle that will
+    % rotate our brain to be parallel with the y-axis
     
 %find optimal translation
     headRotated = imrotate(head,angle);
@@ -31,7 +31,9 @@ pixelRange = 41;
     minPixels = floor(pixelRange/2)*-1;
     
     for pixels = minPixels:(minPixels + pixelRange -1)
-        transHead = imtranslate(headRotated,[pixels,0]);
+            % NOTE: this imtranslate translates by [row, col], while the official
+            % Matlab implementation translates by [TX, TY] or [col, row]
+        transHead = imtranslate(headRotated,[0, pixels]);
         reflectedTransHead = reflectVertically(transHead);
         pixelCorrs(pixels + round(pixelRange/2)) = corr2(transHead,reflectedTransHead);
     end
