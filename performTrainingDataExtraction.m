@@ -3,11 +3,14 @@ function performTrainingDataExtraction()
 winSize = 11;
 nbSamplPerCaseMax = 100;
 
-rootCSV = '../Data/t2/';
-maskDir = '../Data/t2/masks/';
-destDirPatches = '../Data/t2/';
+rootCSV = './mat_data/';
+maskDir = './masks/';
+destDirPatches = './patches/';
 
 listMasksName = dir(strcat(destDir, '*.mat'));
+
+% for each set of masks(ADC ROI), for each infarcted slice, load the corresponding dicom into the "data" variable
+% data{i}.X{j} is the jth slice of the ith set of mask  s
 for i=1:length(listMasksName)
     fnameMask = strcat(destDir, listMasksName(i).name);
 
@@ -27,6 +30,7 @@ end
 X1 = {};
 
 % extract patches
+% for each mask
 for i=1:length(data)
     for slice=1:numel(data{i}.slices)
 
