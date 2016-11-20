@@ -1,12 +1,12 @@
-function thresholded_image = threshold(img, min)
+function thresholded_mask = threshold(img, min)
     rows = size(img,1);
     cols = size(img,2);
-    thresholded_image = zeros(rows,cols);
-    
+    thresholded_mask = zeros(rows,cols);
+
     for row = 1:rows
         for col = 1:cols
             if img(row,col) >= min
-                thresholded_image(row,col) = 1;
+                thresholded_mask(row,col) = 1;
             end
         end
     end

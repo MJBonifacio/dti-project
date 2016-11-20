@@ -9,21 +9,23 @@ destDirPatches = './patches/';
 
 listMasksName = dir(strcat(destDir, '*.mat'));
 
-% for each set of masks(ADC ROI), for each infarcted slice, load the corresponding dicom into the "data" variable
-% data{i}.X{j} is the jth slice of the ith set of mask  s
+% for each study, there is a set of masks(ADC ROI),
+% for each set of masks, there are 1-n infarcted slices, load these into "study_data"
+% for each mask slice in a set, load the corresponding images into "study_data"
 for i=1:length(listMasksName)
     fnameMask = strcat(destDir, listMasksName(i).name);
 
     % read mask
     load(fnameMask, 'mask', 'uslices');
-    data{i}.mask = mask;
-    data{i}.slices = uslices;
+    study_data{i}.mask = mask;
+    study_data{i}.slices = uslices;
 
     % read dicom
+% TODO: modify this after figuring out how the corresponding ADC/DTI images will be stored
     listDicom = subdir(strcat(rootCSV, num2str(i), '/*.dcm'));
     for j=1:numel(uslices)
         fname = listDicom(uslices(j)).name;
-        data{i}.X{j} = dicomread(fname);
+        study_data{i}.corresponding_images{j} = dicomread(fname);
     end
 end
 
@@ -31,15 +33,18 @@ X1 = {};
 
 % extract patches
 % for each mask
-for i=1:length(data)
-    for slice=1:numel(data{i}.slices)
+for i=1:length(study_data)
+    for slice=1:numel(study_data{i}.slices)
 
-        tmp = data{i}.mask{slice};
-        [pty, ptx] = find(tmp > 0);
+        % load mask and find points in the infarcted region
+        current_mask = study_data{i}.mask{slice};
+        [pty, ptx] = find(current_mask > 0);
+        % points in the format of [row, col]
 
         Ys = zeros(1,numel(pty));
         for j=1:numel(pty)
-            Ys(j) = tmp(pty(j), ptx(j)) - 1;
+            Ys(j) = current_mask(pty(j), ptx(j)) - 1;
+  % QUESTION: wouldn't these all just end up as 0 since the mask is binary?
         end
 
         Ys = logical(Ys);
@@ -62,7 +67,7 @@ for i=1:length(data)
         pty2 = [infarctedPty(indxInfa(1:nbSamplPerCase))' normalPty(indxNorm(1:(nbSamplPerCase)))' ]';
         ptx2 = [infarctedPtx(indxInfa(1:nbSamplPerCase))' normalPtx(indxNorm(1:(nbSamplPerCase)))' ]';
 
-        im1 = squeeze(data{i}.X{slice});
+        im1 = squeeze(study_data{i}.corresponding_images{slice});
         im1(im1<0) = 0;
         im1 = im1 ./ max(im1(:));
 
