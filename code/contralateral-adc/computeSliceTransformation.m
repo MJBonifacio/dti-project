@@ -11,7 +11,6 @@ pixelRange = 41;
     head = threshold(image,sliceThresholdIntensity(image));
     headReflected = reflectVertically(head);
     angleCorrs = zeros(angleRange,1);
-
     minAngle = floor(angleRange/2)*-1;
 
     for theta = minAngle:(minAngle + angleRange - 1)
@@ -32,7 +31,7 @@ pixelRange = 41;
 
     for pixels = minPixels:(minPixels + pixelRange -1)
             % NOTE: this imtranslate translates by [row, col], while the official
-            % Matlab implementation translates by [TX, TY] or [col, row]
+            % Matlab2014b implementation translates by [TX, TY] or [col, row]
         transHead = imtranslate(headRotated,[0, pixels]);
         reflectedTransHead = reflectVertically(transHead);
         pixelCorrs(pixels + round(pixelRange/2)) = corr2(transHead,reflectedTransHead);
