@@ -1,2 +1,7 @@
+# Folders
 mat_data/
+masks/
+patches/
+
+*~
 *.asv
