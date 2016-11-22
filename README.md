@@ -7,9 +7,9 @@
 
 ### In Progress
 
-* Extract Training Data comparing ADC ROIs to contralateral regions
+* Extract Training Data comparing DTI ROIs to contralateral regions
 	* y = outcome
-	* x = ADC infarcted or regions contralateral to infarcted regions
+	* x = DTI infarcted vs. regions contralateral to infarcted regions
 *  Extract Training Data with:
 	* y = outcome
 	* x = DTI + ADC
