@@ -14,6 +14,12 @@ idxHigherSlice = 1;
     clear slice
   end
 
+  % if no corresponding DTI
+  if idxHigherSlice > numel(slicesDTI) or numel(slicesDTI) < 1 or idxHigherSlice==1
+    img = -1;
+    return;
+  end
+
   fname1 = slicesDTI(idxHigherSlice-1).name;
   load(fullfile(path, fname1));
   s1 = slice.image;

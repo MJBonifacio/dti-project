@@ -32,6 +32,12 @@ function trainingData = extractContralateralDTITrainingData()
       pathDTI = fullfile(dataRoot, name, 'DTI');
       img = selectCorrespondingDTI(pathDTI, targetHeight, slice.Height, slice.Width);
 
+      if img == -1 % Check if no corresponding DTI exists
+        disp(study);
+        disp(sliceNum)
+        continue;
+      end
+
       transformedSlice = imtranslate(imrotate(img, -1*angle),  [0, -1*translation]);
       transformedMask = imtranslate(imrotate(maskADC, -1*angle),  [0, -1*translation]);
 
