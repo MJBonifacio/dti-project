@@ -11,7 +11,7 @@ function [Xs, Ys] = extractSlicePatches(img, infarctMask)
     indxInfa = randperm(length(infarctedPty));
     indxInfa = indxInfa(1:nbSamplPerCase);
 
-    flippedImage = flipDim(img, 2);
+    flippedImage = flipdim(img, 2);
 
     Xs = cell(1, nbPatches);
     Ys = zeros(1, nbPatches);

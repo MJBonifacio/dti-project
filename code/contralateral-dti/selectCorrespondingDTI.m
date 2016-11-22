@@ -15,7 +15,7 @@ idxHigherSlice = 1;
   end
 
   % if no corresponding DTI
-  if idxHigherSlice > numel(slicesDTI) or numel(slicesDTI) < 1 or idxHigherSlice==1
+  if idxHigherSlice > numel(slicesDTI) | numel(slicesDTI) < 1 | idxHigherSlice==1
     img = -1;
     return;
   end

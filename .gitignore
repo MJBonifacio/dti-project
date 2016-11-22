@@ -5,3 +5,4 @@ patches/
 
 *~
 *.asv
+.DS_STORE
