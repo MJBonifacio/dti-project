@@ -21,10 +21,10 @@ function trainingData = extractContralateralADCTrainingData()
       % load ADC image
       load(infarctedSlices{study}{slice});
       img = slice.image
-
       % calculate slicetranformation of that image
       [angle, translation] = computeSliceTransformation(img);
-      % transform that slice
+
+      % Choose and interpolate appropriate DTI slice
       trasformedSlice = imrotate(imtranslate(img, [0, -1*translation]), -1*angle)
       % extract contralateral training data
     end
