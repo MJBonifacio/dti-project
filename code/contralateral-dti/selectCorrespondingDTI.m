@@ -14,12 +14,14 @@ idxHigherSlice = 1;
     clear slice
   end
 
-  load(fullfile(path, slicesDTI(idxHigherSlice -1)).name);
+  fname1 = slicesDTI(idxHigherSlice-1).name;
+  load(fullfile(path, fname1));
   s1 = slice.image;
   h1 = slice.SliceLocation;
   clear slice
 
-  load(fullfile(path, slicesDTI(idxHigherSlice)).name);
+  fname2 = slicesDTI(idxHigherSlice).name;
+  load(fullfile(path, fname2));
   s2 = slice.image;
   h2 = slice.SliceLocation;
 

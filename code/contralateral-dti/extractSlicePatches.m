@@ -1,52 +1,32 @@
-function [Xs, Ys] = extractSlicePatches(img, infarctMask, )
-% extract patches
-% for each mask
-for i=1:length(study_data)
-    for slice=1:numel(study_data{i}.slices)
+function [Xs, Ys] = extractSlicePatches(img, infarctMask)
+% TODO: Account for the case when contralateral voxels are infarcted
+    nbSamplPerCaseMax = 100;
+    winSize = 11;
 
-        % load mask and find points in the infarcted region
-        current_mask = study_data{i}.mask{slice};
-        [pty, ptx] = find(current_mask > 0);
-        % points in the format of [row, col]
+    % find points[row,col] in the infarcted region
+    [infarctedPty, infarctedPtx] = find(infarctMask > 0);
+    nbSamplPerCase = min(nnz(infarctedPty), nbSamplPerCaseMax);
+    nbPatches = 2*nbSamplPerCase;
 
-        Ys = zeros(1,numel(pty));
-        for j=1:numel(pty)
-            Ys(j) = current_mask(pty(j), ptx(j)) - 1;
-  % QUESTION: wouldn't these all just end up as 0 since the mask is binary?
-        end
+    indxInfa = randperm(length(infarctedPty));
+    indxInfa = indxInfa(1:nbSamplPerCase);
 
-        Ys = logical(Ys);
-        infarctedPty = pty(Ys);
-        infarctedPtx = ptx(Ys);
+    flippedImage = flipDim(img, 2);
 
-        normalPty = pty(~Ys);
-        normalPtx = ptx(~Ys);
+    Xs = cell(1, nbPatches);
+    Ys = zeros(1, nbPatches);
 
-        nbSamplPerCase = min(nnz(Ys), nbSamplPerCaseMax);
+    for i=1:nbSamplPerCase
+      y = infarctedPty(indxInfa(i));
+      x = infarctedPtx(indxInfa(i));
 
-        rand('seed', 0);
-        indxInfa = randperm(length(infarctedPty), nbSamplPerCase);
+      cbInfa = extractCuboid(img, y, x, winSize);
+      cbNorm = flipdim(extractCuboid(flippedImage, y, x, winSize), 2);
 
-        rand('seed', 0);
-        indxNorm = randperm(length(normalPty), nbSamplPerCase);
+      Ys(i) = 1;
+      Xs{i} = cbInfa;
 
-        Y2 = [ones(1,nbSamplPerCase,1) zeros(1,nbSamplPerCase,1)];
-
-        pty2 = [infarctedPty(indxInfa(1:nbSamplPerCase))' normalPty(indxNorm(1:(nbSamplPerCase)))' ]';
-        ptx2 = [infarctedPtx(indxInfa(1:nbSamplPerCase))' normalPtx(indxNorm(1:(nbSamplPerCase)))' ]';
-
-        im1 = squeeze(study_data{i}.corresponding_images{slice});
-        im1(im1<0) = 0;
-        im1 = im1 ./ max(im1(:));
-
-        cb1 = extractCuboidNoReshape(im1,  pty2, ptx2, winSize);
-
-        X1{i} = cat(3, X1{i}, cb1);
-        Y{patient} = Y2;
-
-        clear cb1 cb2 cb Y2 tmp1 tmp2 im1 pty2 ptx2 Ys;
-        break;
+      Ys(nbPatches + 1 - i) = 0;
+      Xs{nbPatches + 1 - i} = cbNorm;
     end
-end
-
 end

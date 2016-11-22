@@ -1,6 +1,7 @@
-function trainingData = extractContralateralADCTrainingData()
+function trainingData = extractContralateralDTITrainingData()
   maskDir = '../../masks';
   dataRoot = '../../mat_data';
+  rand('seed', 0);
 
   masks = dir(fullfile(maskDir, '*.mat'));
   infarctedSlices = selectInfarctedSlices();
@@ -11,24 +12,32 @@ function trainingData = extractContralateralADCTrainingData()
       continue
     end
 
-    maskFilename = fullfile(maskDir, masks(i).name);
+    maskFilename = fullfile(maskDir, masks(study).name);
     [pathstr,name,ext] = fileparts(maskFilename);
-    load(maskFilename);
+    load(maskFilename, 'mask', 'uslices');
     trainingData{study} = cell(numel(uslices), 1);
     studyPath = fullfile(dataRoot, name, 'ADC')
 
-    for slice=1:numel(uslices)
+    for sliceNum=1:numel(uslices)
       % load ADC image
-      load(infarctedSlices{study}{slice});
-      img = slice.image
+      load(infarctedSlices{study}{sliceNum}, 'slice');
+      infarctADC = slice.image;
+      targetHeight = slice.SliceLocation;
+      maskADC = mask{sliceNum};
+
       % calculate slice tranformation of that image
-      [angle, translation] = computeSliceTransformation(img);
+      [angle, translation] = computeSliceTransformation(infarctADC);
 
       % Choose and interpolate appropriate DTI slice
       pathDTI = fullfile(dataRoot, name, 'DTI');
-      selectCorrespondingDTI(path, targetHeight);
-      trasformedSlice = imrotate(imtranslate(img, [0, -1*translation]), -1*angle)
+      img = selectCorrespondingDTI(pathDTI, targetHeight, slice.Height, slice.Width);
+
+      transformedSlice = imtranslate(imrotate(img, -1*angle),  [0, -1*translation]);
+      transformedMask = imtranslate(imrotate(maskADC, -1*angle),  [0, -1*translation]);
+
       % extract contralateral training data
+      [Xs, Ys] = extractSlicePatches(transformedSlice, transformedMask);
+      trainingData{study, sliceNum} = struct('X', Xs, 'Y', Ys)
     end
   end
 end
