@@ -25,3 +25,6 @@
 * https://www.ri.cmu.edu/pub_files/pub2/liu_yanxi_1996_1/liu_yanxi_1996_1.pdf
 ##### Slice Interpolation
 * https://arxiv.org/ftp/arxiv/papers/1402/1402.0936.pdf
+
+##### NIRC Stroke Ouctcome paper
+* https://www.ncbi.nlm.nih.gov/pubmed/22592291
