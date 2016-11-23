@@ -15,8 +15,8 @@ function trainingData = extractContralateralDTITrainingData()
     maskFilename = fullfile(maskDir, masks(study).name);
     [pathstr,name,ext] = fileparts(maskFilename);
     load(maskFilename, 'mask', 'uslices');
-    trainingData{study} = cell(numel(uslices), 1);
     studyPath = fullfile(dataRoot, name, 'ADC')
+    trainingData{study} = cell(1, numel(uslices));
 
     for sliceNum=1:numel(uslices)
       % load ADC image
@@ -43,7 +43,11 @@ function trainingData = extractContralateralDTITrainingData()
 
       % extract contralateral training data
       [Xs, Ys] = extractSlicePatches(transformedSlice, transformedMask);
-      trainingData{study, sliceNum} = struct('X', Xs, 'Y', Ys)
+      trainingData{study}{sliceNum} = struct('X', Xs, 'Y', Ys)
+
+      clear slice
     end
+
+    clear mask ulices
   end
 end

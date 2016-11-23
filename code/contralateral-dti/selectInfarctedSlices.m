@@ -10,16 +10,16 @@ for i=1:numel(masks)
   maskFilename = fullfile(maskDir, masks(i).name);
   [pathstr,name,ext] = fileparts(maskFilename);
   studyNumber = name;
-  studyPath = fullfile(dataRoot, name, 'ADC');
+  studyPath = fullfile(dataRoot, studyNumber, 'ADC');
 
   if ~exist(studyPath, 'dir')
     continue
   end
 
-% Load ADC ROI masks. They will include "mask" and "uslices" variables
-  load(maskFilename);
+% Load ADC ROI masks
+  load(maskFilename, 'mask', 'uslices');
   slices = dir(fullfile(studyPath, '*.mat'));
-  infarctedSlices = cell(numel(uslices), 1);
+  infarctedSlices = cell(1, numel(uslices));
 
   for j=1:numel(uslices)
     infarctedSlice = slices(uslices(j));
