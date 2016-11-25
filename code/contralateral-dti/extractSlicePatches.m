@@ -14,7 +14,8 @@ function [Xs, Ys] = extractSlicePatches(img, infarctMask)
     flippedImage = flipdim(img, 2);
 
     Xs = cell(1, nbPatches);
-    Ys = zeros(1, nbPatches);
+    Ys = ones(1, nbSamplPerCase);
+    Ys = [Ys zeros(1, nbSamplPerCase)]
 
     for i=1:nbSamplPerCase
       y = infarctedPty(indxInfa(i));
@@ -23,10 +24,7 @@ function [Xs, Ys] = extractSlicePatches(img, infarctMask)
       cbInfa = extractCuboid(img, y, x, winSize);
       cbNorm = flipdim(extractCuboid(flippedImage, y, x, winSize), 2);
 
-      Ys(i) = 1;
       Xs{i} = cbInfa;
-
-      Ys(nbPatches + 1 - i) = 0;
-      Xs{nbPatches + 1 - i} = cbNorm;
+      Xs{nbSamplPerCase + i} = cbNorm;
     end
 end
