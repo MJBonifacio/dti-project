@@ -2,6 +2,7 @@
 mat_data/
 masks/
 patches/
+*.mat
 
 *~
 *.asv
