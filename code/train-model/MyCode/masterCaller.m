@@ -1,33 +1,29 @@
 function masterCaller()
 
+dirnameRoc = '../roc';
+dirnameSR = '../SR';
+fnameTrainingSet = '../vectorizedTrainingSet.mat';
 
-%Initialize all necessary matrices to store test and train data
-nbSamplePerPatient = 2 * desiredPoints;
-Xtest = [];
-Xtrain = [];
-Ytrain = [];
-Ytruth = [];
-totalYhat = [];
+addpath(dirnameRoc,dirnameSR);
+load(fnameTrainingSet, 'patchOffsets', 'patchCounts', 'setX', 'setY');
 
 %Randomize patients
+numPatients = length(patchOffsets);
 randIndex = randperm(numPatients);
+totalYhat = [];
+Ytruth = [];
 
 %leave-one-out cross-validation
 for j = 1 : numPatients,
-    listofTestRows = ((randIndex(j) - 1) * nbSamplePerPatient + 1):(randIndex(j) * nbSamplePerPatient);
-    Xtest = X(listofTestRows,:);
-    Ytruth = [Ytruth; Y(listofTestRows,:)];
-    Xtrain = X;
-    Xtrain(listofTestRows,:) = [];
-    Ytrain = Y;
-    Ytrain(listofTestRows,:) = [];
+    [Xtest, localYtruth, Xtrain, Ytrain] = leaveOneOut(randIndex(j), patchOffsets, patchCounts, setX, setY);
 
     %Produce Yhat vector for ROC evaluation
     Yhat = callKSR(Xtest, Xtrain, Ytrain);
     totalYhat = [totalYhat; Yhat];
+    Ytruth = [Ytruth; localYtruth];
 end
 
-[Xeval, Yeval] = perfcurve(Ytruth, totalYhat, 1);
+[Yeval, Xeval] = roc(Ytruth, totalYhat);
 plot(Xeval,Yeval);
 xlabel('False positive rate'); ylabel('True positive rate');
 title('ROC for classification by spectral regression');
