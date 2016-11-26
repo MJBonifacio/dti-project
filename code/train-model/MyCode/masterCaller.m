@@ -14,7 +14,7 @@ totalYhat = [];
 Ytruth = [];
 
 %leave-one-out cross-validation
-for j = 1 : numPatients,
+for j = 1 : numPatients
     [Xtest, localYtruth, Xtrain, Ytrain] = leaveOneOut(randIndex(j), patchOffsets, patchCounts, setX, setY);
 
     %Produce Yhat vector for ROC evaluation

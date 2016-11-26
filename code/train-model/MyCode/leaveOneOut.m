@@ -9,24 +9,24 @@ function [Xtest, Ytruth, Xtrain, Ytrain] = leaveOneOut(excludedPatient, patchOff
   [height, width] = size(setX(:,:,1));
 
 % Initialize Output Variables
-  Xtest = zeros(height, width, numPatches);
+  Xtest = [];
   Ytruth = [];
-  Xtrain = zeros(height, width, totalPatches-numPatches);
+  Xtrain = [];
   Ytrain = [];
 
 % Partition test vector
-  Xtest = setX(:,:,beginExcluded : lastExcluded);
+  Xtest = setX(beginExcluded:lastExcluded);
   Ytruth = setY(beginExcluded:lastExcluded);
 
 % Fill training vectors
   if excludedPatient > 1
     lastBefore = patchOffsets(excludedPatient);
-    Xtrain(:,:,1:lastBefore) = setX(:,:,1:lastBefore);
+    Xtrain = [Xtrain; setX(1:lastBefore)];
     Ytrain = [Ytrain; setY(1:lastBefore)];
   end
   if excludedPatient < numCases
     firstAfter = lastExcluded + 1;
-    Xtrain(:,:,firstAfter:totalPatches) = setX(:,:,firstAfter:totalPatches);
+    Xtrain = [Xtrain; setX(firstAfter:totalPatches)];
     Ytrain = [Ytrain; setY(firstAfter:totalPatches)];
   end
 end
