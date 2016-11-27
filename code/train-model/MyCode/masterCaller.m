@@ -23,7 +23,7 @@ for j = 1 : numPatients
     Ytruth = [Ytruth; localYtruth];
 end
 
-[Yeval, Xeval] = roc(Ytruth, totalYhat);
+[Xeval, Yeval] = perfcurve(Ytruth, totalYhat,1);
 plot(Xeval,Yeval);
 xlabel('False positive rate'); ylabel('True positive rate');
 title('ROC for classification by spectral regression');
