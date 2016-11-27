@@ -27,9 +27,6 @@ for j = 1 : numPatients
 
     %Produce Yhat vector for ROC evaluation
     while endPatch < numPatches
-      beginPatch
-      endPatch
-      numPatches
       % localXtest = Xtest(beginPatch:endPatch);
       localXtrain = Xtrain(beginPatch:endPatch);
       localYtrain = Ytrain(beginPatch:endPatch);
@@ -46,12 +43,11 @@ for j = 1 : numPatients
     localYtrain = Ytrain(beginPatch:endPatch);
     % Yhat = [Yhat; callKSR(localXtest, localXtrain, localYtrain)];
     Yhat = [Yhat; callKSR(Xtest, localXtrain, localYtrain)];
-
-    Yhat = callKSR(Xtest, Xtrain, Ytrain);
     totalYhat = [totalYhat; Yhat];
     Ytruth = [Ytruth; localYtruth];
 end
 
+save('results.mat', 'Ytruth', 'totalYhat');
 [Xeval, Yeval] = perfcurve(Ytruth, totalYhat,1);
 plot(Xeval,Yeval);
 xlabel('False positive rate'); ylabel('True positive rate');
