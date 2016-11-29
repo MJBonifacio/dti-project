@@ -17,23 +17,27 @@ function reducedSet()
   rand('seed', 0);
 
   for i=1:numPatients
-    beginPatch = patchOffsets(i) + 1;
-    endPatch = patchOffsets(i) + patchCounts(i);
+    caseOffset = patchOffsets(i);
+    beginPatch = caseOffset + 1;
+    endPatch = caseOffset + patchCounts(i);
     localSetY = setY(beginPatch:endPatch);
     localSetX = setX(beginPatch:endPatch,:);
 
-    numPatchesToSave = min(maxPatchesPerPatient, patchCounts(i));
+    patchesInStudy = patchCounts(i);
+    numPatchesToSave = min(maxPatchesPerPatient, patchesInStudy);
     offsets = [offsets; precedingPatches];
     counts = [counts; numPatchesToSave];
     precedingPatches = precedingPatches + numPatchesToSave;
 
-    normCases = randperm(numPatchesToSave/2);
-    normIdx = find(localSetY < 1);
-    normIdx = normIdx(normCases);
+    normPatchesIdx = find(localSetY < 1);
+    normCases = randperm(length(normPatchesIdx));
+    normIdx = normPatchesIdx(normCases(1:numPatchesToSave/2));
+    normIdx = normIdx + caseOffset;
 
-    infaCases = randperm(numPatchesToSave/2);
-    infaIdx = find(localSetY > 0);
-    infaIdx = infaIdx(infaCases);
+    infaPatchesIdx = find(localSetY > 0);
+    infaCases = randperm(length(infaPatchesIdx));
+    infaIdx = infaPatchesIdx(infaCases(1:numPatchesToSave/2));
+    infaIdx = infaIdx + caseOffset;
 
     y = [y; setY(normIdx); setY(infaIdx)];
     x = [x; setX(normIdx,:); setX(infaIdx,:)];
