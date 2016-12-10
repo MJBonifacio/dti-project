@@ -1,0 +1,29 @@
+function [testIndex, trainIndex] = generateIndices(numOfPatients)
+	index = randperm(numOfPatients);
+    
+    divideBy = int8(10);
+    toBeDivided = int8(numOfPatients);
+	testSize = idivide(toBeDivided, divideBy, 'floor');
+    
+	Index1Test = index(1:testSize);
+	Index1Train = index((testSize + 1):numOfPatients);
+	Index2Test = index((testSize + 1):(testSize * 2));
+	Index2Train = [index(1:testSize), index(((testSize * 2) + 1):numOfPatients)];
+	Index3Test = index(((testSize * 2) + 1):(testSize * 3));
+	Index3Train = [index(1:(testSize * 2)), index(((testSize * 3) + 1):numOfPatients)];
+	Index4Test = index(((testSize * 3) + 1):(testSize * 4));
+	Index4Train = [index(1:(testSize * 3)), index(((testSize * 4) + 1):numOfPatients)];
+	Index5Test = index(((testSize * 4) + 1):(testSize * 5));
+	Index5Train = [index(1:(testSize * 4)), index(((testSize * 5) + 1):numOfPatients)];
+	Index6Test = index(((testSize * 5) + 1):(testSize * 6));
+	Index6Train = [index(1:(testSize * 5)), index(((testSize * 6) + 1):numOfPatients)];
+	Index7Test = index(((testSize * 6) + 1):(testSize * 7));
+	Index7Train = [index(1:(testSize * 6)), index(((testSize * 7) + 1):numOfPatients)];
+	Index8Test = index(((testSize * 7) + 1):(testSize * 8));
+	Index8Train = [index(1:(testSize * 7)), index(((testSize * 8) + 1):numOfPatients)];
+	Index9Test = index(((testSize * 8) + 1):(testSize * 9));
+	Index9Train = [index(1:(testSize * 8)), index(((testSize * 9) + 1):numOfPatients)];
+	Index10Test = index(((testSize * 9) + 1):numOfPatients);
+	Index10Train = index(1:(testSize * 9));
+    testIndex = [Index1Test; Index2Test; Index3Test; Index4Test; Index5Test; Index6Test; Index7Test; Index8Test; Index9Test; Index10Test];
+    trainIndex = [Index1Train; Index2Train; Index3Train; Index4Train; Index5Train; Index6Train; Index7Train; Index8Train; Index9Train; Index10Train];

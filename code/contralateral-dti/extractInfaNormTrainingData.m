@@ -1,10 +1,10 @@
-function [X, Y, counts, offsets] = extractContralateralDTITrainingData()
+function [X, Y, counts, offsets] = extractInfaNormTrainingData()
   maskDir = '../../masks';
   dataRoot = '../../mat_data';
   FARoot = '../../FA_data';
   rand('seed', 0);
 
-  trainingDataFname = 'trainingData.mat';
+  trainingDataFname = 'infaNormTrainingData.mat';
 
   masks = dir(fullfile(maskDir, '*.mat'));
   infarctedSlices = selectInfarctedSlices();
@@ -26,8 +26,10 @@ function [X, Y, counts, offsets] = extractContralateralDTITrainingData()
     if ~exist(pathFA, 'dir')
       continue
     end
-    [studyX, studyY, numPatches] = extractStudyPatches(mask, uslices, pathFA, study, infarctedSlices);
+    [studyX, studyY, numPatches] = extractInfaNormStudyPatches(mask, uslices, pathFA, study, infarctedSlices);
 
+    size(X)
+    size(studyX)
     X = [X; studyX];
     Y = [Y; studyY];
     counts = [counts; numPatches];

@@ -1,7 +1,9 @@
-function [Xs, Ys, numPatches] = extractSlicePatches(img, infarctMask)
+function [Xs, Ys, numPatches] = extractInfaNormSlicePatches(img, infarctMask)
 % TODO: Account for the case when contralateral voxels are infarcted
     nbSamplPerCaseMax = 100;
     winSize = 11;
+
+    head = threshold(img,sliceThresholdIntensity(img));
 
     % find points[row,col] in the infarcted region
     [infarctedPty, infarctedPtx] = find(infarctMask > 0);
